@@ -1,0 +1,111 @@
+{
+  "name": "remote-rsync",
+  "displayName": "Remote Rsync",
+  "description": "Bidirectional local workspace synchronization with an embedded device over SSH and tar.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:remoteRsync.openRemoteFolder",
+    "onCommand:remoteRsync.syncNow",
+    "onCommand:remoteRsync.pullNow",
+    "onCommand:remoteRsync.pushNow",
+    "onCommand:remoteRsync.checkRemote"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "remoteRsync.openRemoteFolder",
+        "title": "Remote Rsync: Open Remote Folder"
+      },
+      {
+        "command": "remoteRsync.syncNow",
+        "title": "Remote Rsync: Sync Now"
+      },
+      {
+        "command": "remoteRsync.pullNow",
+        "title": "Remote Rsync: Pull Remote → Local"
+      },
+      {
+        "command": "remoteRsync.pushNow",
+        "title": "Remote Rsync: Push Local → Remote"
+      },
+      {
+        "command": "remoteRsync.checkRemote",
+        "title": "Remote Rsync: Check Remote Changes"
+      }
+    ],
+    "configuration": {
+      "title": "Remote Rsync",
+      "properties": {
+        "remoteRsync.host": {
+          "type": "string",
+          "default": "remote-board",
+          "description": "SSH host or alias from ~/.ssh/config."
+        },
+        "remoteRsync.remotePath": {
+          "type": "string",
+          "default": "/opt/myapp",
+          "description": "Remote directory."
+        },
+        "remoteRsync.localDirectory": {
+          "type": "string",
+          "default": ".remote-rsync",
+          "description": "Directory containing the local mirror."
+        },
+        "remoteRsync.syncOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Push changed files after save."
+        },
+        "remoteRsync.remoteCheckIntervalSeconds": {
+          "type": "number",
+          "default": 10,
+          "minimum": 0,
+          "description": "Remote polling interval; 0 disables polling."
+        },
+        "remoteRsync.conflictAction": {
+          "type": "string",
+          "enum": [
+            "ask",
+            "local",
+            "remote"
+          ],
+          "default": "ask",
+          "description": "Default action for conflicts."
+        },
+        "remoteRsync.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            ".git/",
+            "build/",
+            "node_modules/",
+            "*.log",
+            ".remote-rsync/"
+          ],
+          "description": "Patterns excluded from synchronization."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.0.0"
+  }
+}
